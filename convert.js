@@ -13,7 +13,7 @@ let webmLinks = process.argv.slice(2);
     new Promise(resolveForEach =>
       webmLinks.forEach((webmLink, index) => {
         fetch(webmLink).then(async res => {
-          console.log(`Baixando #${index}...`);
+          console.log(`Downloading #${index}...`);
           await new Promise((resolve, reject) => {
             const dest = fs.createWriteStream(`./video${index}.webm`);
             res.body.pipe(dest);
@@ -27,9 +27,9 @@ let webmLinks = process.argv.slice(2);
               reject(err);
             });
           });
-          console.log(`Baixado #${index}!`);
+          console.log(`Downloaded #${index}!`);
 
-          console.log(`Convertendo #${index}...`);
+          console.log(`Converting #${index}...`);
           await new Promise(resolve => {
             exec(
               `.\\ffmpeg.exe -i .\\video${index}.webm .\\video${index}.mp4 -y`,
@@ -44,13 +44,13 @@ let webmLinks = process.argv.slice(2);
               }
             );
           });
-          console.log(`Convertido #${index}!`);
+          console.log(`Converted #${index}!`);
 
-          console.log(`Deletando webm #${index}...`);
+          console.log(`Deleting .webm #${index}...`);
           await new Promise(resolveUnlink =>
             fs.unlink(`.\\video${index}.webm`, () => resolveUnlink())
           );
-          console.log(`Deletado webm #${index}!`);
+          console.log(`Deleted .webm #${index}!`);
 
           resolveForEach();
         });
